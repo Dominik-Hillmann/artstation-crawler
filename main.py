@@ -37,6 +37,7 @@ def main():
 
 
 def parse_parameters():
+    # returns, depth search tree, search terms
     pass
 
 
