@@ -1,6 +1,12 @@
-"""[summary]
-"""
-
+'''
+Intented structure:
+    - get parameters from config files, and command line including search terms
+    - get URLs from the search page using the search terms
+    - for every picture page that we got this way:
+        - Search in profile for other pictures
+        - Search among commentators for pictures with fitting tags
+    - until the amount of pictures is covered or there are no unused URLs
+'''
 # Python libraries
 import requests
 import os
@@ -31,7 +37,7 @@ def main():
 
     for pic_url in pic_urls:
         browser.visit(pic_url)
-        browser.screenshot(os.path.join('D:', 'Repositories', 'artstation-crawler', 'test.jpg'))
+        browser.screenshot(os.path.join('C:', 'Users'))
 
     browser.quit()
 

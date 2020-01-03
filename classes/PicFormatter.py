@@ -1,0 +1,2 @@
+class PicFormatter:
+    pass
