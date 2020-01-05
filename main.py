@@ -18,6 +18,9 @@ import chardet
 from pprint import pprint
 from splinter import Browser
 
+# Self-written
+from classes import URLManager
+
 PIC_URL = 'https://www.artstation.com/artwork/ybG0yx'
 
 def main():
