@@ -1,4 +1,3 @@
-# External libraries
 class URLManager:
     """Manages URLs from which pictures can be downloaded."""
     

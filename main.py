@@ -10,6 +10,7 @@ Intented structure:
 # Python libraries
 import requests
 import os
+import time
 # External libraries
 from bs4 import BeautifulSoup
 # Typing
@@ -19,11 +20,36 @@ from pprint import pprint
 from splinter import Browser
 
 # Self-written
-from classes import URLManager
+from classes.URLManager import URLManager
+from classes.URLExtractor import URLExtractor
 
 PIC_URL = 'https://www.artstation.com/artwork/ybG0yx'
+SEARCH_URL = 'https://www.artstation.com/search?q=winter&sort_by=relevance'
+PIC_PATH = '/'.join(['C:', 'Users', 'Dominik USER', 'Repositories', 'artstation-crawler'])
+# tag projects-list
+    # tag ul, class gallery-grid
+        # tag li, class gallery-grid-item
+            # tag a, href ist gesuchter link
+
+
 
 def main():
+    # test_download()
+    test_url_extraction()
+
+
+def test_url_extraction():
+    browser = Browser()
+    browser.visit(SEARCH_URL)
+    time.sleep(10)
+    markup = browser.html.encode('utf-8')
+    extractor = URLExtractor(markup)
+    pprint(extractor._urls_from_search())
+
+    browser.quit()
+
+
+def test_download():
     browser = Browser()
     browser.visit(PIC_URL)
     print(browser.title)
@@ -36,13 +62,14 @@ def main():
     for pic in pics:
         pic_urls.append(pic['src'].encode('utf-8'))
 
-    print(pic_urls)
-
-    for pic_url in pic_urls:
-        browser.visit(pic_url)
-        browser.screenshot(os.path.join('C:', 'Users'))
-
-    browser.quit()
+    try:
+        for i, pic_url in enumerate(pic_urls):
+            browser.visit(pic_url)
+            browser.screenshot(PIC_PATH + '/pic_{}.png'.format(i))
+    except Exception as e:
+        print('WARNING:', e)
+    finally:
+        browser.quit()
 
 
 def parse_parameters():
