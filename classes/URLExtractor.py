@@ -1,29 +1,40 @@
 # External libraries
 from bs4 import BeautifulSoup
+# Self-written
+from PageTypes import PageTypes
+from URLWrapper import URLWrapper
 
 class URLExtractor:
-    """Testbeschreibung.
     
-    Raises:
-        NotImplementedError: [description]
-        NotImplementedError: [description]
-        NotImplementedError: [description]
-        TypeError: [description]
-    
-    Returns:
-        [type] -- [description]
-    """
-
-    SEACH_PAGE = 'search'
-    USER_PAGE = 'user'
-    PIC_PAGE = 'picture'
-    
-    def __init__(self, html, page_title = None, page_url = None):
-        self.page_title = page_title # Used for type identification
+    def __init__(self, html, url):
         self.html_soup = BeautifulSoup(html, 'html.parser')
+        self.url = URLWrapper(url)
 
 
     def get_urls(self):
+        page_type = self.url.get_type()
+
+        if page_type == PageTypes.PIC_VIEW:
+            return self._urls_from_pic_site()
+        elif page_type == PageTypes.SEARCH:
+            return self._urls_from_search()
+        elif page_type == PageTypes.PROFILE:
+            return self._urls_from_profile()
+    
+
+    def get_type(self):
+        return self.url.get_type()
+
+    
+    def get_pic_title(self):
+        raise NotImplementedError
+
+
+    def get_pic_description(self):
+        raise NotImplementedError
+
+    
+    def get_pic_tags(self):
         raise NotImplementedError
 
 
@@ -43,21 +54,23 @@ class URLExtractor:
         return extracted_urls
 
 
-    def _urls_from_pic_site(self, html_soup):
+    def _urls_from_pic_site(self):
+        extracted_urls = []
+        commenter_names = self.html_soup.find_all('a', {'class': 'commenter-name' })
+        base_url = 'https://www.artstation.com'
+
+        for commenter_name in commenter_names:
+            profile_name = commenter_name['href'].encode('utf-8')
+            url = base_url + profile_name
+            extracted_urls.append(url)
+        
+        return extracted_urls
+    
+
+    def _urls_from_profile(self):
+        return self._urls_from_search()
+
+
+
+    def _urls_from_profile(self):
         raise NotImplementedError
-
-
-    def _urls_from_profile(self, html_soup):
-        raise NotImplementedError
-
-
-    def _detect_type(self):
-        if True:
-            return self.USER_PAGE
-        elif True:
-            return self.SEACH_PAGE
-        elif False:
-            return self.PIC_PAGE
-        else:
-            raise TypeError('Neither HTML for artsation\'s search, user, or picture page provided.')
-

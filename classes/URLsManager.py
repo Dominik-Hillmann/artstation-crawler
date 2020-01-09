@@ -1,4 +1,4 @@
-class URLManager:
+class URLsManager:
     """Manages URLs from which pictures can be downloaded."""
     
     def __init__(self):

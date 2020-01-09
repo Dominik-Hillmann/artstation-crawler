@@ -20,11 +20,13 @@ from pprint import pprint
 from splinter import Browser
 
 # Self-written
-from classes.URLManager import URLManager
+from classes.URLsManager import URLsManager
 from classes.URLExtractor import URLExtractor
 
-PIC_URL = 'https://www.artstation.com/artwork/ybG0yx'
+PIC_URL = 'https://www.artstation.com/artwork/EV0lD2'
 SEARCH_URL = 'https://www.artstation.com/search?q=winter&sort_by=relevance'
+
+
 PIC_PATH = '/'.join(['C:', 'Users', 'Dominik USER', 'Repositories', 'artstation-crawler'])
 # tag projects-list
     # tag ul, class gallery-grid
@@ -32,7 +34,7 @@ PIC_PATH = '/'.join(['C:', 'Users', 'Dominik USER', 'Repositories', 'artstation-
             # tag a, href ist gesuchter link
 
 
-
+# Idee: spaeter Upload in neuem Repo, ohne Erwaehnung artstation
 def main():
     # test_download()
     test_url_extraction()
@@ -40,11 +42,11 @@ def main():
 
 def test_url_extraction():
     browser = Browser()
-    browser.visit(SEARCH_URL)
+    browser.visit(PIC_URL)
     time.sleep(10)
     markup = browser.html.encode('utf-8')
-    extractor = URLExtractor(markup)
-    pprint(extractor._urls_from_search())
+    extractor = URLExtractor(markup, PIC_URL)
+    pprint(extractor.get_urls())
 
     browser.quit()
 
