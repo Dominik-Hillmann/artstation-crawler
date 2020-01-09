@@ -68,9 +68,11 @@ class URLExtractor:
     
 
     def _urls_from_profile(self):
-        return self._urls_from_search()
+        extracted_urls = []
+        images = self.html_soup.find_all('img', { 'class': 'image' })
 
+        for image in images:
+            url = image['src'].encode('utf-8')
+            extracted_urls.append(url)
 
-
-    def _urls_from_profile(self):
-        raise NotImplementedError
+        return extracted_urls

@@ -25,6 +25,7 @@ from classes.URLExtractor import URLExtractor
 
 PIC_URL = 'https://www.artstation.com/artwork/EV0lD2'
 SEARCH_URL = 'https://www.artstation.com/search?q=winter&sort_by=relevance'
+PROFILE_URL = 'https://www.artstation.com/alexbeddows'
 
 
 PIC_PATH = '/'.join(['C:', 'Users', 'Dominik USER', 'Repositories', 'artstation-crawler'])
@@ -42,10 +43,10 @@ def main():
 
 def test_url_extraction():
     browser = Browser()
-    browser.visit(PIC_URL)
+    browser.visit(PROFILE_URL)
     time.sleep(10)
     markup = browser.html.encode('utf-8')
-    extractor = URLExtractor(markup, PIC_URL)
+    extractor = URLExtractor(markup, PROFILE_URL)
     pprint(extractor.get_urls())
 
     browser.quit()
