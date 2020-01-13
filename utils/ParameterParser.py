@@ -25,31 +25,36 @@ class ParameterParser:
         param_parser = ArgumentParser()
         param_parser.add_argument(
             '-s', '--search-terms', 
-            type = list, 
+            type = str,
+            required = True,
             action = 'store',
             nargs = '+',
             help = 'Required: the search terms with pictures will be searched for.'
         )
         param_parser.add_argument(
-            '-n', '--number_pictures',
+            '-n', '--number-pictures',
             type = int,
+            required = True,
             action = 'store',
-            nargs = 1,
-            help = 'Required: the number of pictures you want to downloaded.'
+            help = 'Required: the number of pictures you want to download.'
         )
+        param_dict = vars(param_parser.parse_args())
+        return param_dict
 
-        return vars(param_parser.parse_args())
 
     def _parse_config_file(self):
-        with open('config.json', 'r') as config_file:
-            config = json.load(config_file)
+        with open('config.json', mode = 'r') as config_file:
+            config_json = json.loads(config_file.read(), encoding = 'utf-8')
+            return self._remove_u_str_keys(config_json)
+    
 
-            # for key, value in config.items():
-            #     config[str(key)] = str(value)
-            #     del config[key]
+    @staticmethod
+    def _remove_u_str_keys(dictionary):
+        re_dict = {}
+        for key, value in dictionary.items():
+            if type(value) is unicode:
+                re_dict[str(key)] = str(value)
+            else:
+                re_dict[str(key)] = value
 
-            return config
-            
-
-test = ParameterParser().get_params()
-print(test)
+        return re_dict 
