@@ -6,6 +6,10 @@ class URLWrapper:
         self.type = self._detect_type(url)
     
 
+    def get_url(self):
+        return self.url
+
+
     def get_type(self):
         return self.type
 
