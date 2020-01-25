@@ -1,9 +1,12 @@
 # Python libraries
 from argparse import ArgumentParser
 import json
-# External libraries
+
 
 class ParameterParser:
+    """Converts console parameters and config file into a dictionary that
+    will be used throughout the program.
+    """
 
     def __init__(self):
         self.command_line_args = self._parse_command_line_parameters()
@@ -38,6 +41,7 @@ class ParameterParser:
             action = 'store',
             help = 'Required: the number of pictures you want to download.'
         )
+
         param_dict = vars(param_parser.parse_args())
         return param_dict
 
@@ -45,6 +49,7 @@ class ParameterParser:
     def _parse_config_file(self):
         with open('config.json', mode = 'r') as config_file:
             config_json = json.loads(config_file.read(), encoding = 'utf-8')
+            
             return self._remove_u_str_keys(config_json)
     
 

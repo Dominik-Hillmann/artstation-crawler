@@ -1,77 +1,78 @@
+# Python libraries
+import os
+import json
+
+
 class URLsManager:
-    """Manages URLs from which pictures can be downloaded."""
+    """Manages URLs from which pictures can be downloaded.
+    It contains two lists: a list of already visited URLs and a list of URLs
+    were not yet visited.
+    """
+
+    url_dir = os.path.abspath(os.path.join(__file__, '..', '..', 'urls'))
     
     def __init__(self):
-        self.queue = []
-        self.visited_urls = set()
+        self.queue = self._read_queue()
+        self.visited = self._read_visited()
 
-
-    def add_urls(self, urls):
-        """Prepends URLs to the queue such that the oldest URLs will be used first.
-        
-        Arguments
-        ---------
-            urls {list|str} -- URLs to be added.
-        """
-
-        if type(urls) is str:
-            urls_to_be_added = [urls]
-        else:
-            urls_to_be_added = urls
-
-        self._prepend_to_queue(urls_to_be_added)
-
-
+    
     def get_next_url(self):
-        """Returns the oldest URL available.
-        
-        Returns
-        -------
-            str or None -- URL if one is available, None if queue is empty. By then, program
-            should be terminated.
-        """
+        next_url = self.queue.pop()
+        self.visited.add(next_url)
+        self._write_queue()
+        self._write_visited()
 
-        try:
-            next_url = self.queue.pop()
-        except IndexError:
-            return None
-
-        self.visited_urls.add(next_url)
         return next_url
 
 
-    def get_visited_urls(self):
-        """Getter for the visited URLs.
-        
-        Returns
-        -------
-            set -- The visited URLs.
-        """
+    def url_into_queue(self, url):
+        if url not in self.visited:
+            self.queue.append(url)
+            self._write_queue()
 
-        return self.visited_urls
+
+    def urls_into_queue(self, urls):
+        for url in urls:
+            self.url_into_queue(url)
 
     
-    def unvisited_urls_left(self):
-        """Whether there are still unvisited URLs left.
-        
-        Returns
-        -------
-            bool -- True if there are unused URLs.
-        """
+    def is_visited_url(self, url):
+        return url in self.visited
 
-        return len(self.queue) != 0
 
-    ###################
-    # Private methods #
-    ###################
+    ###########
+    # Private #
+    ###########
 
-    def _prepend_to_queue(self, urls):
-        """Inserts new URLs such that the older ones will be used first.
-        
-        Arguments
-        ---------
-            urls {list} -- The URLs to be inserted.
-        """
+    def _read_queue(self):
+        with open(os.path.join(self.url_dir, 'queue.json'), 'r') as queue_file:
+            queue = json.load(queue_file, encoding = 'utf-8')
+            queue = queue.url_queue
 
-        for url in urls:
-            self.queue.insert(0, url)
+            return queue
+
+
+    def _read_visited(self):
+        with open(os.path.join(self.url_dir, 'visited.json'), 'r') as visited_file:
+            visited = json.load(visited_file, encoding = 'utf-8')
+            visited = set(visited.visited_urls)
+
+            return visited
+    
+
+    def _write_queue(self):
+        with open(os.path.join(self.url_dir, 'queue.json'), 'w') as queue_file:
+            json.dump(
+                { 'url_queue': self.queue }, 
+                queue_file,
+                encoding = 'utf-8'
+            )
+
+    
+    def _write_visited(self):
+        with open(os.path.join(self.url_dir, 'visited.json'), 'w') as visited_file:
+            json.dump(
+                { 'visited_urls': list(self.visited) },
+                visited_file,
+                encoding = 'utf-8'
+            )

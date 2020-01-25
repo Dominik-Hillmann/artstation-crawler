@@ -1,2 +1,0 @@
-# Welche Bilder sollen für Proof of Concept genutzt werden?
-* Grundgedanke: Das GAN kann Bilder so neu erstellen, wenn ausgewählte Tags eng genug gesetzt sind, um tatsächlich Muster zu erarbeiten, aber weit genug, um genügend Daten zu finden
