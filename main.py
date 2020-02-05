@@ -11,6 +11,7 @@ Intented structure:
 import requests
 import os
 import time
+from pprint import pprint
 
 # External libraries
 from bs4 import BeautifulSoup
@@ -26,6 +27,8 @@ from selenium.webdriver.common.keys import Keys
 from classes.URLsManager import URLsManager
 from classes.URLExtractor import URLExtractor
 
+from utils.ParameterParser import ParameterParser
+
 PIC_URL = 'https://www.artstation.com/artwork/EV0lD2'
 SEARCH_URL = 'https://www.artstation.com/search?q=winter&sort_by=relevance'
 PROFILE_URL = 'https://www.artstation.com/alexbeddows'
@@ -40,12 +43,17 @@ PIC_PATH = '/'.join(['C:', 'Users', 'Dominik USER', 'Repositories', 'artstation-
 
 # Idee: spaeter Upload in neuem Repo, ohne Erwaehnung artstation
 def main():
-    # # test_download()
-    # test_url_extraction()
-    with Browser() as b:
-        b.visit('https://youtube.com')
-        b.execute_script('window.open("https://google.com");')
-        time.sleep(10)
+    params = ParameterParser().get_params()
+    pprint(params)
+    urls_manager = URLsManager(params['search_terms'])
+
+    # try:
+    #     pass
+    # except KeyboardInterrupt:
+    #     pass
+    # finally:
+    #     pass
+
 
 def test_url_extraction():
     browser = Browser()

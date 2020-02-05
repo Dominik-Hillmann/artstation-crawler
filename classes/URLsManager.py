@@ -1,4 +1,5 @@
 # Python libraries
+from os import path
 import os
 import json
 
@@ -9,9 +10,11 @@ class URLsManager:
     were not yet visited.
     """
 
-    url_dir = os.path.abspath(os.path.join(__file__, '..', '..', 'urls'))
+    url_dir = path.abspath(path.join(__file__, '..', '..', 'urls'))
     
-    def __init__(self):
+    def __init__(self, search_terms):
+        self.search_dir_name = '_'.join(search_terms)
+        self._create_seach_dir()
         self.queue = self._read_queue()
         self.visited = self._read_visited()
 
@@ -19,8 +22,8 @@ class URLsManager:
     def get_next_url(self):
         next_url = self.queue.pop()
         self.visited.add(next_url)
-        self._write_queue()
-        self._write_visited()
+        self._write_queue(self.queue)
+        self._write_visited(self.visited)
 
         return next_url
 
@@ -28,7 +31,7 @@ class URLsManager:
     def url_into_queue(self, url):
         if url not in self.visited:
             self.queue.append(url)
-            self._write_queue()
+            self._write_queue(self.queue)
 
 
     def urls_into_queue(self, urls):
@@ -45,34 +48,43 @@ class URLsManager:
     ###########
 
     def _read_queue(self):
-        with open(os.path.join(self.url_dir, 'queue.json'), 'r') as queue_file:
+        with open(path.join(self.url_dir, self.search_dir_name, 'queue.json'), 'r') as queue_file:
             queue = json.load(queue_file, encoding = 'utf-8')
-            queue = queue.url_queue
+            queue = queue['url_queue']
 
             return queue
 
 
     def _read_visited(self):
-        with open(os.path.join(self.url_dir, 'visited.json'), 'r') as visited_file:
+        with open(path.join(self.url_dir, self.search_dir_name, 'visited.json'), 'r') as visited_file:
             visited = json.load(visited_file, encoding = 'utf-8')
-            visited = set(visited.visited_urls)
+            visited = set(visited['visited_urls'])
 
             return visited
     
 
-    def _write_queue(self):
-        with open(os.path.join(self.url_dir, 'queue.json'), 'w') as queue_file:
+    def _write_queue(self, queue):
+        with open(path.join(self.url_dir, self.search_dir_name, 'queue.json'), 'w') as queue_file:
             json.dump(
-                { 'url_queue': self.queue }, 
+                { 'url_queue': queue }, 
                 queue_file,
                 encoding = 'utf-8'
             )
 
     
-    def _write_visited(self):
-        with open(os.path.join(self.url_dir, 'visited.json'), 'w') as visited_file:
+    def _write_visited(self, visited):
+        with open(path.join(self.url_dir, self.search_dir_name, 'visited.json'), 'w') as visited_file:
             json.dump(
-                { 'visited_urls': list(self.visited) },
+                { 'visited_urls': list(visited) },
                 visited_file,
                 encoding = 'utf-8'
             )
+
+    
+    def _create_seach_dir(self):
+        print('Creating new search term directory because search terms were not encountered before.')
+        all_search_term_dir_names = os.listdir(path.join(self.url_dir))
+        if self.search_dir_name not in all_search_term_dir_names:
+            os.mkdir(path.join(self.url_dir, self.search_dir_name))
+            self._write_queue([])
+            self._write_visited([])

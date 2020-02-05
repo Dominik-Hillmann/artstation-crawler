@@ -2,5 +2,6 @@
     "target_directory": "",
     "picture_width_in_px": 0,
     "picture_height_in_px": 0,
+    "n_pics_in_batch": 20,
     "picture_file_type": "jpg"
 }

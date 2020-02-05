@@ -15,6 +15,7 @@ A crawler retrieving pictures from artstation given their tags.
 # Öffne Suchseite
 # lese 'zu besuchende URLs'
 # lese 'besuchte URLs' (beides zu Mengen)
+# wenn noch kein Ordner für die Suchbegriffe existiert, erstelle neuen Ordner
 
 # für die benötigte Zahl an Batches:
     # benötigte Zahl sei Batchgröße
