@@ -25,7 +25,8 @@ from selenium.webdriver.common.keys import Keys
 
 # Self-written
 from classes.URLsManager import URLsManager
-from classes.URLExtractor import URLExtractor
+from classes.URLsExtractor import URLsExtractor
+from classes.BrowserWrapper import BrowserWrapper
 
 from utils.ParameterParser import ParameterParser
 
@@ -45,8 +46,19 @@ PIC_PATH = '/'.join(['C:', 'Users', 'Dominik USER', 'Repositories', 'artstation-
 def main():
     params = ParameterParser().get_params()
     pprint(params)
-    urls_manager = URLsManager(params['search_terms'])
+    urls_manager = URLsManager(params['search_terms'])    
+    browser = BrowserWrapper(params['search_terms'], params['target_directory'])
+    markup = browser.get_search_markup()
+    pprint(markup)
+    urls_extractor = URLsExtractor(markup)
+    extracted_urls = urls_extractor.get_urls()
+    urls_manager.urls_into_queue(extracted_urls)
+    browser.scroll_down() # Does not work yet
+    browser.screenshot(urls_manager.get_next_url())
+    time.sleep(5)
 
+
+    # browser.close()
     # try:
     #     pass
     # except KeyboardInterrupt:
@@ -60,7 +72,7 @@ def test_url_extraction():
     browser.visit(PROFILE_URL)
     time.sleep(10)
     markup = browser.html.encode('utf-8')
-    extractor = URLExtractor(markup, PROFILE_URL)
+    extractor = URLsExtractor(markup, PROFILE_URL)
     pprint(extractor.get_urls())
 
     browser.quit()

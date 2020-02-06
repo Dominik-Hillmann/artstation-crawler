@@ -17,6 +17,7 @@ class URLsManager:
         self._create_seach_dir()
         self.queue = self._read_queue()
         self.visited = self._read_visited()
+        print(self.queue, self.visited)
 
     
     def get_next_url(self):
@@ -43,9 +44,9 @@ class URLsManager:
         return url in self.visited
 
 
-    ###########
-    # Private #
-    ###########
+    ###################
+    # Private methods #
+    ###################
 
     def _read_queue(self):
         with open(path.join(self.url_dir, self.search_dir_name, 'queue.json'), 'r') as queue_file:
@@ -82,9 +83,9 @@ class URLsManager:
 
     
     def _create_seach_dir(self):
-        print('Creating new search term directory because search terms were not encountered before.')
-        all_search_term_dir_names = os.listdir(path.join(self.url_dir))
+        all_search_term_dir_names = os.listdir(self.url_dir)
         if self.search_dir_name not in all_search_term_dir_names:
             os.mkdir(path.join(self.url_dir, self.search_dir_name))
             self._write_queue([])
             self._write_visited([])
+            print('Created new search term directory because search terms were not encountered before.')
