@@ -2,6 +2,6 @@
     "target_directory": "C:\\Users\\Dominik USER\\Repositories\\artstation-crawler",
     "picture_width_in_px": 0,
     "picture_height_in_px": 0,
-    "n_pics_in_batch": 20,
+    "n_pics_in_batch": 5,
     "picture_file_type": "jpg"
 }

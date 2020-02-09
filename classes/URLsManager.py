@@ -12,15 +12,22 @@ class URLsManager:
 
     url_dir = path.abspath(path.join(__file__, '..', '..', 'urls'))
     
-    def __init__(self, search_terms):
+    def __init__(self, search_terms, batch_size, total_pic_number):
         self.search_dir_name = '_'.join(search_terms)
         self._create_seach_dir()
         self.queue = self._read_queue()
         self.visited = self._read_visited()
-        print(self.queue, self.visited)
+        
+        self.batch_size = batch_size
+        self.total_pic_number = total_pic_number
+
+        # print(self.queue, self.visited)
 
     
     def get_next_url(self):
+        if len(self.queue) == 0:
+            return None
+
         next_url = self.queue.pop()
         self.visited.add(next_url)
         self._write_queue(self.queue)
@@ -29,19 +36,43 @@ class URLsManager:
         return next_url
 
 
+    def urls_into_queue(self, urls):
+        for url in urls:
+            self.url_into_queue(url)
+
+
     def url_into_queue(self, url):
         if url not in self.visited:
             self.queue.append(url)
             self._write_queue(self.queue)
 
 
-    def urls_into_queue(self, urls):
-        for url in urls:
-            self.url_into_queue(url)
+    def total_pic_number_collected(self):
+        return len(self.visited) >= self.total_pic_number
 
     
     def is_visited_url(self, url):
         return url in self.visited
+
+
+    def urls_exceed_batch_size(self):
+        return len(self.queue) > self.batch_size
+
+    
+    def urls_left(self):
+        return len(self.queue) > 0
+
+    
+    def write_urls(self):
+        self._write_queue(self.queue)
+        self._write_visited(self.visited)
+
+    
+    def print_url_list_sizes(self):
+        print('Writing managed URLs due to keyboard interrupt: {} in queue and {} visited.'.format(
+            str(len(self.queue)),
+            str(len(self.visited))
+        ))
 
 
     ###################

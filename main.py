@@ -43,62 +43,40 @@ PIC_PATH = '/'.join(['C:', 'Users', 'Dominik USER', 'Repositories', 'artstation-
 
 
 # Idee: spaeter Upload in neuem Repo, ohne Erwaehnung artstation
-def main():
+def main():    
     params = ParameterParser().get_params()
-    pprint(params)
-    urls_manager = URLsManager(params['search_terms'])    
+    urls_manager = URLsManager(
+        params['search_terms'], 
+        params['n_pics_in_batch'], 
+        params['number_pictures']
+    )    
     browser = BrowserWrapper(params['search_terms'], params['target_directory'])
-    markup = browser.get_search_markup()
-    pprint(markup)
-    urls_extractor = URLsExtractor(markup)
-    extracted_urls = urls_extractor.get_urls()
-    urls_manager.urls_into_queue(extracted_urls)
-    browser.scroll_down() # Does not work yet
-    browser.screenshot(urls_manager.get_next_url())
-    time.sleep(5)
 
+    # print(browser.test_element_screenshot())
 
-    # browser.close()
-    # try:
-    #     pass
-    # except KeyboardInterrupt:
-    #     pass
-    # finally:
-    #     pass
-
-
-def test_url_extraction():
-    browser = Browser()
-    browser.visit(PROFILE_URL)
-    time.sleep(10)
-    markup = browser.html.encode('utf-8')
-    extractor = URLsExtractor(markup, PROFILE_URL)
-    pprint(extractor.get_urls())
-
-    browser.quit()
-
-
-def test_download():
-    browser = Browser()
-    browser.visit(PIC_URL)
-    print(browser.title)
-    markup = browser.html.encode('utf-8')
-    soup = BeautifulSoup(markup, 'html.parser')
-
-    pic_urls = []
-    pics = soup.find_all('img', { 'class': 'img' })
-
-    for pic in pics:
-        pic_urls.append(pic['src'].encode('utf-8'))
 
     try:
-        for i, pic_url in enumerate(pic_urls):
-            browser.visit(pic_url)
-            browser.screenshot(PIC_PATH + '/pic_{}.png'.format(i))
-    except Exception as e:
-        print('WARNING:', e)
+        while not urls_manager.total_pic_number_collected():
+            while not urls_manager.urls_exceed_batch_size():
+                browser.load_more_imgs()
+                markup = browser.get_search_markup()
+                urls = URLsExtractor(markup).get_urls()
+                urls_manager.urls_into_queue(urls)
+
+            while urls_manager.urls_left():
+                url = urls_manager.get_next_url()
+                browser.screenshot(url)
+
+    except KeyboardInterrupt:
+        urls_manager.print_url_list_sizes()
+        urls_manager.write_urls()
+
     finally:
-        browser.quit()
+        del browser
+
+
+def test_element_screenshot():
+    browser = BrowserWrapper
 
 
 def parse_parameters():

@@ -45,11 +45,11 @@ class URLsExtractor:
 
     def _urls_from_search(self):
         extracted_urls = []
-        parents = self.html_soup.find_all('li', { 'class': 'gallery-grid-item' })
+        img_elements = self.html_soup.find_all('img', { 'class': 'd-block' })
 
-        for parent in parents:
-            child = parent.find('a', recursive = False)
-            url = child['href'].encode('utf-8')
+        for img_element in img_elements:
+            # child = parent.find('a', recursive = False)
+            url = img_element['src'].encode('utf-8')
             extracted_urls.append(url)
 
         return extracted_urls
