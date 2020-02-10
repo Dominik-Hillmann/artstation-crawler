@@ -5,6 +5,7 @@ import time
 # External imports
 from splinter import Browser
 
+
 class BrowserWrapper:
 
     search_url = 'https://www.artstation.com/search?q='
@@ -77,5 +78,3 @@ class BrowserWrapper:
         """
 
         self.browser.execute_script('window.open("{}");'.format(url))
-
-    

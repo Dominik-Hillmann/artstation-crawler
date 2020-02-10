@@ -1,48 +1,14 @@
-'''
-Intented structure:
-    - get parameters from config files, and command line including search terms
-    - get URLs from the search page using the search terms
-    - for every picture page that we got this way:
-        - Search in profile for other pictures
-        - Search among commentators for pictures with fitting tags
-    - until the amount of pictures is covered or there are no unused URLs
-'''
-# Python libraries
-import requests
-import os
-import time
-from pprint import pprint
+"""This script collects pictures from a certain website to train a GAN later on."""
 
-# External libraries
-from bs4 import BeautifulSoup
-
-# Typing
-from typing import Callable
-import chardet
-from pprint import pprint
-from splinter import Browser
-from selenium.webdriver.common.keys import Keys
-
-# Self-written
+# Main classes
 from classes.URLsManager import URLsManager
 from classes.URLsExtractor import URLsExtractor
 from classes.BrowserWrapper import BrowserWrapper
-
+# Utility classes
 from utils.ParameterParser import ParameterParser
-
-PIC_URL = 'https://www.artstation.com/artwork/EV0lD2'
-SEARCH_URL = 'https://www.artstation.com/search?q=winter&sort_by=relevance'
-PROFILE_URL = 'https://www.artstation.com/alexbeddows'
+from utils.Logger import Logger
 
 
-PIC_PATH = '/'.join(['C:', 'Users', 'Dominik USER', 'Repositories', 'artstation-crawler'])
-# tag projects-list
-    # tag ul, class gallery-grid
-        # tag li, class gallery-grid-item
-            # tag a, href ist gesuchter link
-
-
-# Idee: spaeter Upload in neuem Repo, ohne Erwaehnung artstation
 def main():    
     params = ParameterParser().get_params()
     urls_manager = URLsManager(
@@ -51,58 +17,35 @@ def main():
         params['number_pictures']
     )    
     browser = BrowserWrapper(params['search_terms'], params['target_directory'])
-
-    # print(browser.test_element_screenshot())
-
+    logger = Logger(params['log_file_directory'])
 
     try:
+        logger.info('Started new session for search terms {}.'.format(
+            ' '.join(params['search_terms'])
+        ))
         while not urls_manager.total_pic_number_collected():
             while not urls_manager.urls_exceed_batch_size():
                 browser.load_more_imgs()
                 markup = browser.get_search_markup()
                 urls = URLsExtractor(markup).get_urls()
                 urls_manager.urls_into_queue(urls)
+            
+            logger.info('Collected full batch of URLs.')
 
             while urls_manager.urls_left():
                 url = urls_manager.get_next_url()
                 browser.screenshot(url)
+                logger.info('Downloaded {}.'.format(url))
+            
+            logger.info('Downloaded all images from current batch, collecting new URLs.')
 
     except KeyboardInterrupt:
+        logger.warn('Keyboard interrupt, trying to make URL lists persistent...')
         urls_manager.print_url_list_sizes()
         urls_manager.write_urls()
 
     finally:
         del browser
-
-
-def test_element_screenshot():
-    browser = BrowserWrapper
-
-
-def parse_parameters():
-    # returns, depth search tree, search terms
-    pass
-
-
-def get_search_page_links(start_page_url, stop_condition):
-    """[summary]
-    
-    Arguments:
-        start_page_url {[type]} -- [description]
-        stop_condition {[type]} -- [description]
-    """
-    pass
-
-
-def add_to_queue():
-    pass
-
-
-
-
-
-def print_stats():
-    pass
 
 
 if __name__ == '__main__':
