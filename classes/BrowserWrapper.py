@@ -4,18 +4,33 @@ import time
 
 # External imports
 from splinter import Browser
+import stem.process
+from stem import Signal
+from stem.control import Controller
+from selenium.common.exceptions import WebDriverException
 
 
 class BrowserWrapper:
 
     search_url = 'https://www.artstation.com/search?q='
     seach_options = '&sort_by=relevance'
-    scroll_js_code = 'window.scrollBy(0, 1000);'
+    scroll_js_code = 'window.scrollBy(0, 10000);'
 
+    proxyIP = '127.0.0.1'
+    proxyPort = 9150
+    proxy_settings = {
+        'network.proxy.type': 1,
+        'network.proxy.ssl': proxyIP,
+        'network.proxy.ssl_port': proxyPort,
+        'network.proxy.socks': proxyIP,
+        'network.proxy.socks_port': proxyPort,
+        'network.proxy.socks_remote_dns': True,
+        'network.proxy.ftp': proxyIP,
+        'network.proxy.ftp_port': proxyPort
+    }
 
     def __init__(self, search_terms, download_dir):
         self.download_dir = download_dir
-
         self.browser = Browser()
         self.search_terms = '%20'.join(search_terms)
         self.browser.visit(self.search_url + self.search_terms + self.seach_options)
@@ -69,6 +84,10 @@ class BrowserWrapper:
     ###################
     # Private methods #
     ###################
+
+    def _switch_ip(self):
+        raise NotImplementedError
+
 
     def _open_in_seperate_window(self, url):
         """Opens a link in a seperate window.

@@ -39,5 +39,10 @@ class Logger:
 
 
     def _write_to_file(self, message):
-        with open(self.file_path, 'a') as log_file:
-            log_file.write(message)
+        try:
+            with open(self.file_path, 'a+') as log_file:
+                log_file.write(message)
+        
+        except IOError:
+            with open(self.file_path, 'w+') as log_file:
+                log_file.write(message)

@@ -5,8 +5,7 @@ import json
 
 class ParameterParser:
     """Converts console parameters and config file into a dictionary that
-    will be used throughout the program.
-    """
+    will be used throughout the program."""
 
     def __init__(self):
         self.command_line_args = self._parse_command_line_parameters()
@@ -26,6 +25,7 @@ class ParameterParser:
 
     def _parse_command_line_parameters(self):
         param_parser = ArgumentParser()
+        
         param_parser.add_argument(
             '-s', '--search-terms', 
             type = str,
@@ -34,6 +34,7 @@ class ParameterParser:
             nargs = '+',
             help = 'Required: the search terms with pictures will be searched for.'
         )
+        
         param_parser.add_argument(
             '-n', '--number-pictures',
             type = int,
@@ -42,7 +43,26 @@ class ParameterParser:
             help = 'Required: the number of pictures you want to download.'
         )
 
+        param_parser.add_argument(
+            '-l', '--links-only',
+            action = 'store_true',
+            required = False,
+            help = 'If flag is set, only new links will be extracted from the \
+            search page and put into the queue.'
+        )
+
+        param_parser.add_argument(
+            '-p', '--pictures-only',
+            action = 'store_true',
+            required = False,
+            help = 'If flag is set, only pictures from the queue will be downloaded.'
+        )
+
         param_dict = vars(param_parser.parse_args())
+        if param_dict['links_only'] and param_dict['pictures_only']:
+            raise ValueError('You can only use either the links-only flag or \
+            the pictures-only flag but not both.')
+
         return param_dict
 
 

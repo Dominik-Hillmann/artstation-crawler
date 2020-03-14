@@ -1,5 +1,7 @@
 """This script collects pictures from a certain website to train a GAN later on."""
 
+# Python libraries
+from pprint import pprint
 # Main classes
 from classes.URLsManager import URLsManager
 from classes.URLsExtractor import URLsExtractor
@@ -11,6 +13,9 @@ from utils.Logger import Logger
 
 def main():    
     params = ParameterParser().get_params()
+    links_only = params['links_only']
+    pics_only = params['pictures_only']
+
     urls_manager = URLsManager(
         params['search_terms'], 
         params['n_pics_in_batch'], 
@@ -24,18 +29,20 @@ def main():
             ' '.join(params['search_terms'])
         ))
         while not urls_manager.total_pic_number_collected():
-            while not urls_manager.urls_exceed_batch_size():
-                browser.load_more_imgs()
-                markup = browser.get_search_markup()
-                urls = URLsExtractor(markup).get_urls()
-                urls_manager.urls_into_queue(urls)
+            if not pics_only:
+                while not urls_manager.urls_exceed_batch_size():
+                    browser.load_more_imgs()
+                    markup = browser.get_search_markup()
+                    urls = URLsExtractor(markup).get_urls()
+                    urls_manager.urls_into_queue(urls)
             
             logger.info('Collected full batch of URLs.')
 
-            while urls_manager.urls_left():
-                url = urls_manager.get_next_url()
-                browser.screenshot(url)
-                logger.info('Downloaded {}.'.format(url))
+            if not links_only:
+                while urls_manager.urls_left():
+                    url = urls_manager.get_next_url()
+                    browser.screenshot(url)
+                    logger.info('Downloaded {}.'.format(url))
             
             logger.info('Downloaded all images from current batch, collecting new URLs.')
 

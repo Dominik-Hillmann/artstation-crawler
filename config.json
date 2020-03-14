@@ -1,8 +1,8 @@
 {
-    "target_directory": "C:\\Users\\Dominik USER\\Repositories\\artstation-crawler",
-    "log_file_directory": "C:\\Users\\Dominik USER\\Repositories\\artstation-crawler",
+    "target_directory": "C:\\Users\\Dominik USER\\Desktop\\pics",
+    "log_file_directory": "C:\\Users\\Dominik USER\\Desktop\\pics",
     "picture_width_in_px": 0,
     "picture_height_in_px": 0,
-    "n_pics_in_batch": 5,
+    "n_pics_in_batch": 100,
     "picture_file_type": "jpg"
 }
