@@ -7,7 +7,8 @@ class ParameterParser:
     """Converts console parameters and config file into a dictionary that
     will be used throughout the program."""
 
-    def __init__(self):
+    def __init__(self, config_file_name = 'config.json'):
+        self.config_file_name = config_file_name
         self.command_line_args = self._parse_command_line_parameters()
         self.config_args = self._parse_config_file()
 
@@ -67,7 +68,7 @@ class ParameterParser:
 
 
     def _parse_config_file(self):
-        with open('config.json', mode = 'r') as config_file:
+        with open(self.config_file_name, mode = 'r') as config_file:
             config_json = json.loads(config_file.read(), encoding = 'utf-8')
             
             return self._remove_u_str_keys(config_json)

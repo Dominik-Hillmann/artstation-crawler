@@ -13,8 +13,8 @@ from selenium.common.exceptions import WebDriverException
 class BrowserWrapper:
 
     search_url = 'https://www.artstation.com/search?q='
-    seach_options = '&sort_by=relevance'
-    scroll_js_code = 'window.scrollBy(0, 10000);'
+    seach_options = '&sort_by=date'
+    scroll_js_code = 'window.scrollBy(0, 50000);'
 
     proxyIP = '127.0.0.1'
     proxyPort = 9150
@@ -70,7 +70,8 @@ class BrowserWrapper:
     def get_search_markup(self):
         """Current markup of the dynamically loading page.
         
-        Returns:
+        Returns
+        -------
             str -- The HTML markup of the search page.
         """
 

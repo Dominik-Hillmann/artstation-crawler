@@ -21,8 +21,6 @@ class URLsManager:
         self.batch_size = batch_size
         self.total_pic_number = total_pic_number
 
-        # print(self.queue, self.visited)
-
     
     def get_next_url(self):
         if len(self.queue) == 0:
@@ -55,8 +53,16 @@ class URLsManager:
         return url in self.visited
 
 
-    def urls_exceed_batch_size(self):
-        return len(self.queue) > self.batch_size
+    def urls_exceed_batch_size(self, picture_search_only):
+        if picture_search_only:
+            print('search mode')
+            return False # Search for URLs indefinetly.
+        else:
+            return len(self.queue) > self.batch_size
+
+
+    def in_queue(self):
+        return len(self.queue)
 
     
     def urls_left(self):
