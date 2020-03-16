@@ -53,10 +53,10 @@ class URLsManager:
         return url in self.visited
 
 
-    def urls_exceed_batch_size(self, picture_search_only):
-        if picture_search_only:
-            print('search mode')
-            return False # Search for URLs indefinetly.
+    def urls_exceed_batch_size(self, url_search_mode):
+        if url_search_mode:
+            # If we only search for URLs, then the batch size never exceeds. 
+            return False
         else:
             return len(self.queue) > self.batch_size
 

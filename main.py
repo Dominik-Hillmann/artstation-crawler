@@ -25,9 +25,13 @@ def main():
         logger.info('Started new session for search terms {}.'.format(
             ' '.join(params['search_terms'])
         ))
+        if params['links_only']:
+            logger.info('Using URL search-only mode.')
+        elif params['pictures_only']:
+            logger.info('Using picture download-only mode.')        
 
         while not urls_manager.total_pic_number_collected():
-            collect_urls(params, urls_manager, browser)            
+            collect_urls(params, urls_manager, browser, logger)            
             logger.info('Collected full batch of URLs. {} in queue.'.format(urls_manager.in_queue()))
             download_pics(params, urls_manager, browser, logger)
             logger.info('Downloaded all images from current batch, collecting new URLs.')
@@ -41,18 +45,18 @@ def main():
         del browser
     
 
-def collect_urls(params, urls_manager, browser):
-    picture_search_only = params['pictures_only']
-
-    if picture_search_only:
+def collect_urls(params, urls_manager, browser, logger):
+    if params['pictures_only']:
         return
 
-    while not urls_manager.urls_exceed_batch_size(picture_search_only):
-        print('Drinnen')
+    while not urls_manager.urls_exceed_batch_size(params['links_only']):
         browser.load_more_imgs()
         markup = browser.get_search_markup()
         urls = URLsExtractor(markup).get_urls()
         urls_manager.urls_into_queue(urls)
+        
+        if params['links_only']:
+            logger.info('Now {} in queue.'.format(urls_manager.in_queue()))
 
 
 def download_pics(params, urls_manager, browser, logger):
