@@ -1,7 +1,7 @@
-#Python libraries
+# Python libraries
 import os
 import time
-
+from random import choice as rand_choice
 # External imports
 from splinter import Browser
 import stem.process
@@ -56,13 +56,12 @@ class BrowserWrapper:
         """
 
         self._open_in_seperate_window(url)
-        time.sleep(10)
+        self._random_wait_time()
         pic_window = self.browser.windows[1]
         pic_window.is_current = True
 
         screenshot_element = self.browser.find_by_css('img').first
         screenshot_element.screenshot(os.path.join(self.download_dir, 'pic.png'))
-        # self.browser.find_by_css('img').first.screenshot(os.path.join(self.download_dir, 'pic.png'))
         
         pic_window.close()
 
@@ -75,7 +74,7 @@ class BrowserWrapper:
             str -- The HTML markup of the search page.
         """
 
-        time.sleep(10) # Site is dynamic, needs a while to build up.
+        self._random_wait_time()
         self.search_window.is_current = True
         markup = self.browser.html.encode('utf-8')
 
@@ -85,6 +84,11 @@ class BrowserWrapper:
     ###################
     # Private methods #
     ###################
+
+    def _random_wait_time(self):
+        num_wait_secs = rand_choice(list(range(10, 26)))
+        time.sleep(num_wait_secs)
+
 
     def _switch_ip(self):
         raise NotImplementedError

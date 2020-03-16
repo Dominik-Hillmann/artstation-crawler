@@ -11,8 +11,8 @@ from utils.ParameterParser import ParameterParser
 from utils.Logger import Logger
 
 
-def main():    
-    params = ParameterParser(config_file_name = 'config-test.json').get_params()
+def main():
+    params = ParameterParser().get_params()
     urls_manager = URLsManager(
         params['search_terms'], 
         params['n_pics_in_batch'], 
@@ -42,7 +42,7 @@ def main():
         urls_manager.write_urls()
 
     finally:
-        del browser
+        exit()
     
 
 def collect_urls(params, urls_manager, browser, logger):
