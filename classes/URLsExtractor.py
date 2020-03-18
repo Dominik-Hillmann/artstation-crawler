@@ -9,7 +9,10 @@ class URLsExtractor:
         
 
     def get_urls(self):
-        return self._urls_from_search()
+        try:
+            return self._urls_from_search()
+        except:
+            return None # Did not load fast enough, just go on with the next one.
 
 
     ###################

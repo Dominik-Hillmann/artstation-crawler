@@ -35,6 +35,9 @@ class URLsManager:
 
 
     def urls_into_queue(self, urls):
+        if urls is None:
+            return
+
         for url in urls:
             self.url_into_queue(url)
 
