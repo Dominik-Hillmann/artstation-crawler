@@ -86,7 +86,7 @@ class BrowserWrapper:
     ###################
 
     def _random_wait_time(self):
-        num_wait_secs = rand_choice(list(range(7, 21)))
+        num_wait_secs = rand_choice(list(range(3, 15)))
         time.sleep(num_wait_secs)
 
 

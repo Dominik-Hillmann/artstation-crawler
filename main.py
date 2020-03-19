@@ -40,6 +40,10 @@ def main():
         logger.warn('Keyboard interrupt, trying to make URL lists persistent...')
         urls_manager.print_url_list_sizes()
         urls_manager.write_urls()
+    
+    except Exception as e:
+        logger.log('Different exception leading to program abort:')
+        logger.log(str(e))
 
     finally:
         exit()
