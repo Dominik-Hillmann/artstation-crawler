@@ -2,13 +2,16 @@
 
 # Python libraries
 from pprint import pprint
-# Main classes
+import time 
+# Internal modules
 from classes.URLsManager import URLsManager
 from classes.URLsExtractor import URLsExtractor
 from classes.BrowserWrapper import BrowserWrapper
-# Utility classes
+
 from utils.ParameterParser import ParameterParser
 from utils.Logger import Logger
+# External modules
+from splinter.exceptions import ElementDoesNotExist as ElementDoesNotExistException
 
 
 def main():
@@ -33,20 +36,22 @@ def main():
         while not urls_manager.total_pic_number_collected():
             collect_urls(params, urls_manager, browser, logger)            
             logger.info('Collected full batch of URLs. {} in queue.'.format(urls_manager.in_queue()))
-            download_pics(params, urls_manager, browser, logger)
+
+            try:
+                download_pics(params, urls_manager, browser, logger)
+            except ElementDoesNotExistException:
+                time.sleep(30)
+                try:
+                    download_pics(params, urls_manager, browser, logger)
+                except ElementDoesNotExistException:
+                    continue
+
             logger.info('Downloaded all images from current batch, collecting new URLs.')
 
     except KeyboardInterrupt:
         logger.warn('Keyboard interrupt, trying to make URL lists persistent...')
         urls_manager.print_url_list_sizes()
         urls_manager.write_urls()
-    
-    except Exception as e:
-        logger.log('Different exception leading to program abort:')
-        logger.log(str(e))
-
-    finally:
-        exit()
     
 
 def collect_urls(params, urls_manager, browser, logger):
