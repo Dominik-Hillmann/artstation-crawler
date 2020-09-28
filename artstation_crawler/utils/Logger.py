@@ -10,12 +10,24 @@ class Logger:
 
 
     def info(self, message):
+        """Logs as normal message.
+
+        Args:
+            message (str): The message.
+        """
+
         message = self._modify_log_message(message, 'info')
         print(message)
         self._write_to_file(message)
 
 
     def warn(self, message):
+        """Logs a warning.
+
+        Args:
+            message (str): The warning.
+        """
+
         message = self._modify_log_message(message, 'warn')
         print(message)
         self._write_to_file(message)

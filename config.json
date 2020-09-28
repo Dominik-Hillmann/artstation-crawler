@@ -1,6 +1,6 @@
 {
-    "target_directory": "C:\\Users\\Dominik USER\\Desktop\\pics",
-    "log_file_directory": "C:\\Users\\Dominik USER\\Desktop\\pics",
+    "target_directory": "path/to/dir",
+    "log_file_directory": "path/to/dir",
     "picture_width_in_px": 0,
     "picture_height_in_px": 0,
     "n_pics_in_batch": 100,

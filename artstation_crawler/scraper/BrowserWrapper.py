@@ -11,6 +11,12 @@ from selenium.common.exceptions import WebDriverException
 
 
 class BrowserWrapper:
+    """Controls the browser.
+
+    Args:
+        search_terms (List[str]): The search terms for the artstation search.
+        download_dir (str): The directory into which the images will be stored.
+    """
 
     search_url = 'https://www.artstation.com/search?q='
     seach_options = '&sort_by=date'
@@ -86,12 +92,15 @@ class BrowserWrapper:
     ###################
 
     def _random_wait_time(self):
+        """Lets the thread sleep for a random time so that it is not apparent
+        that the user is a crawler."""
+
         num_wait_secs = rand_choice(list(range(3, 15)))
         time.sleep(num_wait_secs)
 
 
     def _switch_ip(self):
-        raise NotImplementedError
+        raise NotImplementedError()
 
 
     def _open_in_seperate_window(self, url):

@@ -1,0 +1,1 @@
+"""Contains classes directly involved in managing the scraper."""

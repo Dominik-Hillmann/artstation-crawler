@@ -14,6 +14,12 @@ class ParameterParser:
 
     
     def get_params(self):
+        """Get the parsed parameters.
+
+        Returns:
+            dict: The parameter dictionary.
+        """
+
         all_params = {}
         all_params.update(self.command_line_args)
         all_params.update(self.config_args)        

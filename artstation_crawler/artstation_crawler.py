@@ -1,13 +1,13 @@
+#!/usr/bin/python
 """This script collects pictures from a certain website to train a GAN later on."""
 
 # Python libraries
 from pprint import pprint
 import time 
 # Internal modules
-from classes.URLsManager import URLsManager
-from classes.URLsExtractor import URLsExtractor
-from classes.BrowserWrapper import BrowserWrapper
-
+from scraper.URLsManager import URLsManager
+from scraper.URLsExtractor import URLsExtractor
+from scraper.BrowserWrapper import BrowserWrapper
 from utils.ParameterParser import ParameterParser
 from utils.Logger import Logger
 # External modules
